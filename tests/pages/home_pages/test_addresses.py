@@ -901,7 +901,7 @@ def test_list_receive_addresses(mocker, m5stickv, tdata):
             True,
             0,
             "show_address",
-            "bc1qtwhtzyd6yq6mkzpzk0sz7udcv59nhvm5zevkgp9f3hh6vu3kkg3sfkku2a",
+            "bc1quvhpwjd8ht8kk0pugppgxh7zm8ayfgpqgxgzyc25ea948ss4p4hscnsg35",
             None,
             [
                 *([BUTTON_PAGE_PREV] * 2),  # Go to "Next addresses"
@@ -936,6 +936,9 @@ def test_list_receive_addresses(mocker, m5stickv, tdata):
         if load:
             wallet.load(descriptor, FORMAT_PMOFN)
             assert wallet.has_change_addr()
+            # Bitcoin Core refuses miniscript that repeats a key
+            keys = [k.get_public_key().sec() for k in wallet.descriptor.derive(0).keys]
+            assert len(set(keys)) == len(keys)
 
         # Create a context object with the mocker and the wallet
         # and adadpt the method to the test case
@@ -1117,7 +1120,7 @@ def test_list_change_addresses(mocker, m5stickv, tdata):
             True,
             1,
             "show_address",
-            "bc1qtufz48hmjvf0ahwx8npg33z49enx0gcku20s88u608y7yqp0plustd4q8d",
+            "bc1q0ggqvwp96lltxlmxlf0asrzknk0nv4dzwtl0an8l2qmak9gvd73qkqz0uj",
             None,
             [
                 *([BUTTON_PAGE_PREV] * 2),  # Go to "Next addresses"
@@ -1152,6 +1155,9 @@ def test_list_change_addresses(mocker, m5stickv, tdata):
         if load:
             wallet.load(descriptor, FORMAT_PMOFN)
             assert wallet.has_change_addr()
+            # Bitcoin Core refuses miniscript that repeats a key
+            keys = [k.get_public_key().sec() for k in wallet.descriptor.derive(0).keys]
+            assert len(set(keys)) == len(keys)
 
         # Create a context object with the mocker and the wallet
         # and adadpt the method to the test case
